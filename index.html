@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Renda Passiva | Vitor Souza</title>
+<meta name="description" content="Calcule quanto você precisa investir para ter a renda passiva mensal que você quer. Compare renda fixa, FIIs e dividendos, com o patrimônio necessário em cada opção.">
+<style>
+  :root{
+    --ink:#0B0B0B; --ink2:#1F1F1F; --grey:#6B6B6B; --line:#E9E9E9;
+    --bg:#FFFFFF; --soft:#F7F7F5; --accent:#0B0B0B; --warn:#B3261E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.5; padding:28px 20px 80px;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+
+  /* assinatura */
+  .head{display:flex;align-items:center;gap:12px;margin-bottom:44px}
+  .head .av{width:56px;height:56px;border-radius:50%;background:var(--soft);flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#9A9A9A}
+  .head .nm{font-size:17px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+  .head .hd{font-size:13px;color:#8A8A8A;margin-top:1px}
+  .badge{width:14px;height:14px;flex:none}
+
+  .kick{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#9A9A9A;margin-bottom:14px}
+  h1{font-size:40px;font-weight:800;line-height:1.08;letter-spacing:-.035em;margin-bottom:16px}
+  .lead{font-size:17px;color:var(--grey);line-height:1.62;max-width:600px;margin-bottom:40px}
+
+  /* card de input */
+  .card{background:var(--soft);border-radius:16px;padding:26px 22px;margin-bottom:26px}
+  .card h2{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8A8A8A;margin-bottom:20px}
+
+  .field{margin-bottom:20px}
+  .field:last-child{margin-bottom:0}
+  .field label{display:block;font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:7px}
+  .field .hint{font-size:12px;color:#8A8A8A;margin-top:5px;line-height:1.45}
+  .inputwrap{position:relative;display:flex;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:0 14px;transition:border-color .15s}
+  .inputwrap:focus-within{border-color:#0B0B0B}
+  .inputwrap .pre{font-size:15px;color:#8A8A8A;font-weight:500;margin-right:4px}
+  .inputwrap input{
+    width:100%;border:0;outline:0;background:transparent;padding:14px 0;
+    font-size:18px;font-weight:600;color:var(--ink);font-family:inherit;letter-spacing:-.01em;
+  }
+  .inputwrap input::placeholder{color:#C4C4C4;font-weight:400}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.two{grid-template-columns:1fr}}
+
+  /* resultado */
+  .hero-res{background:var(--ink);color:#fff;border-radius:16px;padding:30px 24px;margin-bottom:14px}
+  .hero-res .lbl{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#9A9A9A;margin-bottom:10px}
+  .hero-res .big{font-size:46px;font-weight:800;letter-spacing:-.04em;line-height:1.05}
+  .hero-res .sub{font-size:14px;color:#B5B5B5;margin-top:12px;line-height:1.55}
+  @media(max-width:560px){.hero-res .big{font-size:34px}h1{font-size:31px}}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .mini{background:var(--soft);border-radius:14px;padding:20px}
+  .mini .lbl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8A8A8A;margin-bottom:8px}
+  .mini .v{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+  .mini .s{font-size:13px;color:#8A8A8A;margin-top:6px;line-height:1.45}
+
+  /* tabela */
+  h3.sec{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:38px 0 6px}
+  p.sec-sub{font-size:14px;color:var(--grey);margin-bottom:18px;line-height:1.55}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9A9A9A;padding:0 0 12px;border-bottom:1px solid var(--line)}
+  th.r,td.r{text-align:right}
+  td{padding:15px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  td.prod{font-weight:700}
+  td.prod small{display:block;font-weight:400;color:#8A8A8A;font-size:12px;margin-top:3px}
+  td.val{font-weight:800;font-size:16px;letter-spacing:-.02em;white-space:nowrap}
+  td.tax{color:var(--grey);font-size:13px;white-space:nowrap}
+
+  /* gráfico */
+  .chartbox{background:var(--soft);border-radius:16px;padding:22px 18px 12px;margin-top:14px}
+  canvas{width:100%;height:220px;display:block}
+
+  /* detalhes */
+  details{margin-top:26px;border-top:1px solid var(--line);padding-top:18px}
+  summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--ink2);list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"+ ";color:#9A9A9A}
+  details[open] summary::before{content:"– "}
+  details p, details ul{font-size:14px;color:var(--grey);line-height:1.65;margin-top:12px}
+  details ul{padding-left:20px}
+  details li{margin-bottom:7px}
+
+  .disc{margin-top:34px;padding:18px 20px;background:var(--soft);border-radius:12px;font-size:12.5px;color:#7A7A7A;line-height:1.6}
+  .disc b{color:#5A5A5A}
+  .src{font-size:11.5px;color:#A0A0A0;margin-top:14px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="av">VS</div>
+    <div>
+      <div class="nm">Vitor Souza
+        <svg class="badge" viewBox="0 0 24 24"><path fill="#0095F6" d="M12 1.5l2.7 2.1 3.4-.4 1.3 3.2 3 1.7-.9 3.3.9 3.3-3 1.7-1.3 3.2-3.4-.4L12 22.5l-2.7-2.1-3.4.4-1.3-3.2-3-1.7.9-3.3-.9-3.3 3-1.7 1.3-3.2 3.4.4z"/><path fill="#fff" d="M10.8 15.6l-3-3 1.15-1.15 1.85 1.85 4.25-4.25L16.2 10.2z"/></svg>
+      </div>
+      <div class="hd">@vitorsouzainvest</div>
+    </div>
+  </div>
+
+  <div class="kick">Calculadora</div>
+  <h1>Quanto você precisa para viver de renda?</h1>
+  <p class="lead">Coloque sua renda desejada e veja o patrimônio necessário, quanto falta aportar e em quanto tempo você chega lá. A conta é feita em valores de hoje, já descontando a inflação.</p>
+
+  <div class="card">
+    <h2>Seus números</h2>
+
+    <div class="field">
+      <label for="renda">Renda passiva que você quer por mês</label>
+      <div class="inputwrap"><span class="pre">R$</span><input id="renda" type="text" inputmode="numeric" value="10.000" autocomplete="off"></div>
+      <div class="hint">Em valores de hoje, o que você precisa receber por mês sem trabalhar.</div>
+    </div>
+
+    <div class="two">
+      <div class="field">
+        <label for="patrimonio">Patrimônio investido hoje</label>
+        <div class="inputwrap"><span class="pre">R$</span><input id="patrimonio" type="text" inputmode="numeric" value="100.000" autocomplete="off"></div>
+      </div>
+      <div class="field">
+        <label for="aporte">Quanto investe por mês</label>
+        <div class="inputwrap"><span class="pre">R$</span><input id="aporte" type="text" inputmode="numeric" value="2.000" autocomplete="off"></div>
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="field">
+        <label for="cdi">CDI (% ao ano)</label>
+        <div class="inputwrap"><input id="cdi" type="text" inputmode="decimal" value="13,65" autocomplete="off"><span class="pre">%</span></div>
+        <div class="hint">B3, 18/11/2026. Pode trocar.</div>
+      </div>
+      <div class="field">
+        <label for="ipca">Inflação prevista (% ao ano)</label>
+        <div class="inputwrap"><input id="ipca" type="text" inputmode="decimal" value="4,63" autocomplete="off"><span class="pre">%</span></div>
+        <div class="hint">IPCA 12 meses até out/2026.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-res">
+    <div class="lbl">Patrimônio necessário</div>
+    <div class="big" id="rPatrimonio">–</div>
+    <div class="sub" id="rPatrimonioSub">–</div>
+  </div>
+
+  <div class="grid2">
+    <div class="mini">
+      <div class="lbl">Tempo até a meta</div>
+      <div class="v" id="rTempo">–</div>
+      <div class="s" id="rTempoSub">–</div>
+    </div>
+    <div class="mini">
+      <div class="lbl">Renda que você já tem</div>
+      <div class="v" id="rRendaHoje">–</div>
+      <div class="s" id="rRendaHojeSub">–</div>
+    </div>
+  </div>
+
+  <h3 class="sec">Onde é mais barato chegar lá</h3>
+  <p class="sec-sub">Mesma renda mensal, patrimônio diferente em cada tipo de investimento. Quanto maior o rendimento líquido, menos capital você precisa juntar.</p>
+  <table id="tab">
+    <thead>
+      <tr><th>Investimento</th><th class="r">Rende</th><th class="r">Precisa ter</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <p class="sec-sub" style="margin-top:14px;font-size:13px;color:#9A9A9A">Nos FIIs e nas ações, o rendimento informado já é a renda sobre um patrimônio que tende a acompanhar a inflação. Nas demais linhas, o valor mostrado é a taxa nominal já líquida de imposto, convertida em taxa real.</p>
+
+  <h3 class="sec">Sua evolução</h3>
+  <p class="sec-sub" id="chartSub">–</p>
+  <div class="chartbox"><canvas id="grafico"></canvas></div>
+
+  <details>
+    <summary>Como a conta é feita</summary>
+    <p><b>Patrimônio necessário</b> = renda mensal × 12 ÷ taxa anual líquida. Se você quer R$ 10 mil por mês (R$ 120 mil por ano) e o investimento rende 10% líquido ao ano, precisa de R$ 1.200.000.</p>
+    <p><b>Valores de hoje.</b> A taxa usada é real, ou seja, o rendimento já descontada a inflação. Assim a renda de R$ 10 mil mantém o poder de compra dos R$ 10 mil de hoje, e não os de daqui a 20 anos.</p>
+    <p><b>Tempo até a meta.</b> Simulação mês a mês: o saldo rende, você aporta, o saldo rende de novo. Sem considerar variação de mercado, imposto sobre o giro nem taxa de administração.</p>
+    <p><b>Imposto.</b> Renda fixa tributada aparece líquida de 15% (IR regressivo no prazo longo). LCI, LCA, CRI, CRA e poupança entram isentos. FIIs: rendimento mensal isento de IR para pessoa física dentro das regras; ações comuns teriam 15% sobre o ganho, mas dividendos são isentos.</p>
+  </details>
+
+  <details>
+    <summary>Por que o número assusta</summary>
+    <p>Para tirar R$ 10 mil por mês sem consumir o principal, você precisa de algo entre R$ 1,2 e R$ 1,8 milhão, dependendo de onde investe. A conta é dura porque renda perpétua exige capital grande.</p>
+    <p>Três caminhos para encurtar isso, e nenhum deles é mágica:</p>
+    <ul>
+      <li>Aumentar o aporte mensal, que é a variável que mais muda o prazo.</li>
+      <li>Aceitar consumir parte do principal por um período definido, o que reduz muito o capital exigido e é o que a maioria das pessoas realmente faz.</li>
+      <li>Combinar as duas coisas: uma renda menor saindo do rendimento e o resto vindo da venda programada de ativos.</li>
+    </ul>
+  </details>
+
+  <div class="disc">
+    <b>Simulação educacional.</b> Não é recomendação de investimento, não é garantia de rentabilidade e não considera seu perfil, seus objetivos ou sua situação tributária. Rentabilidade passada não se repete. Rentabilidade real, inflação e imposto mudam ao longo do tempo. Antes de decidir, converse com um profissional certificado.
+    <div class="src">Referências de mercado em 21/11/2026: CDI 13,65% a.a. (B3, 18/11/2026), Selic meta 13,75% a.a., IPCA 4,63% em 12 meses até outubro/2026 (IBGE via Banco Central).</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  function num(el){
+    var v = String(el.value || "").replace(/\./g,"").replace(",",".").replace(/[^\d.\-]/g,"");
+    var n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+  }
+  function brl(n){
+    if (!isFinite(n) || n <= 0) return "R$ 0";
+    return n.toLocaleString("pt-BR", {style:"currency", currency:"BRL", maximumFractionDigits:0});
+  }
+  function pct(n){
+    return (n*100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}) + "%";
+  }
+  function real(nominal, infl){
+    return (1 + nominal) / (1 + infl) - 1;
+  }
+  // patrimonio necessario para renda mensal, taxa anual liquida (nominal)
+  function patrimonioPara(rendaMensal, taxaAnual){
+    if (taxaAnual <= 0) return Infinity;
+    return rendaMensal * 12 / taxaAnual;
+  }
+  // meses ate atingir a meta com aportes mensais
+  function mesesAteMeta(p0, aporte, taxaAnual, meta){
+    if (p0 >= meta) return 0;
+    if (aporte <= 0 && p0 <= 0) return Infinity;
+    var im = Math.pow(1 + taxaAnual, 1/12) - 1;
+    var saldo = p0, m = 0;
+    while (saldo < meta && m < 1200){
+      saldo = saldo * (1 + im) + aporte;
+      m++;
+    }
+    return (saldo >= meta) ? m : Infinity;
+  }
+  function trajetoria(p0, aporte, taxaAnual, meses){
+    var im = Math.pow(1 + taxaAnual, 1/12) - 1;
+    var out = [p0], s = p0;
+    for (var i=0;i<meses;i++){ s = s*(1+im) + aporte; out.push(s); }
+    return out;
+  }
+  function fmtTempo(meses){
+    if (!isFinite(meses)) return "–";
+    if (meses === 0) return "Hoje";
+    var a = Math.floor(meses/12), m = meses % 12;
+    if (a === 0) return m + (m === 1 ? " mês" : " meses");
+    var s = a + (a === 1 ? " ano" : " anos");
+    if (m > 0) s += " e " + m + (m === 1 ? " mês" : " meses");
+    return s;
+  }
+
+  // produtos: nome, descrição, taxa bruta ao ano, isento de IR
+  // jaReal = true quando o rendimento já é uma renda real (yield sobre ativo que acompanha a inflação)
+  function produtos(cdi){
+    return [
+      {nome:"CDB 100% do CDI", desc:"Pós-fixado, IR 15% no prazo longo", bruto:cdi,      ir:0.15, jaReal:false},
+      {nome:"LCI / LCA 90% do CDI", desc:"Isenta de IR para pessoa física", bruto:cdi*0.90, ir:0,    jaReal:false},
+      {nome:"FII de tijolo, yield 9%", desc:"Rendimento isento de IR, mas o yield não é garantido", bruto:0.09, ir:0, jaReal:true},
+      {nome:"Ações de dividendos, yield 7%", desc:"Dividendos isentos, dependem do lucro da empresa", bruto:0.07, ir:0, jaReal:true},
+      {nome:"Poupança", desc:"Isenta de IR, perde da inflação na prática", bruto:0.0825, ir:0, jaReal:false}
+    ];
+  }
+
+  var TAXA_BASE = null; // taxa liquida real do produto principal (CDI 100%) usada no topo
+
+  function calcular(){
+    var renda   = num($("renda"));
+    var p0      = num($("patrimonio"));
+    var aporte  = num($("aporte"));
+    var cdi     = num($("cdi")) / 100;
+    var infl    = num($("ipca")) / 100;
+
+    if (cdi <= 0) cdi = 0.1365;
+
+    // taxa do produto de referência: CDI 100% liquido de 15%, em termos reais
+    var brutoRef = cdi;
+    var liqRef   = brutoRef * (1 - 0.15);
+    var realRef  = real(liqRef, infl);
+    TAXA_BASE = realRef;
+
+    var meta = patrimonioPara(renda, realRef);
+    $("rPatrimonio").textContent = isFinite(meta) ? brl(meta) : "–";
+    $("rPatrimonioSub").textContent = isFinite(meta)
+      ? brl(renda) + " por mês, em valores de hoje. Equivale a " + brl(renda*12) + " por ano."
+      : "Informe uma taxa de retorno válida.";
+
+    var meses = mesesAteMeta(p0, aporte, realRef, meta);
+    $("rTempo").textContent = fmtTempo(meses);
+    $("rTempoSub").textContent = isFinite(meses) && meses > 0
+      ? "Aportando " + brl(aporte) + " por mês, com rendimento real de " + pct(realRef) + " ao ano."
+      : (isFinite(meses) ? "Você já tem o patrimônio necessário." : "Com esse aporte não chega na meta em 100 anos. Aumente o aporte.");
+
+    var rendaHoje = p0 * realRef / 12;
+    $("rRendaHoje").textContent = brl(rendaHoje);
+    $("rRendaHojeSub").textContent = p0 > 0
+      ? brl(p0) + " já rendem isso por mês sem consumir o principal."
+      : "Sem patrimônio investido, não há renda ainda.";
+
+    // tabela
+    var tb = $("tab").querySelector("tbody");
+    tb.innerHTML = "";
+    produtos(cdi).forEach(function(p){
+      var liq = p.bruto * (1 - p.ir);
+      var r   = p.jaReal ? liq : real(liq, infl);
+      var need = patrimonioPara(renda, r);
+      var tr = document.createElement("tr");
+      tr.innerHTML = '<td class="prod">' + p.nome + '<small>' + p.desc + '</small></td>' +
+                     '<td class="r tax">' + pct(r) + ' real</td>' +
+                     '<td class="r val">' + (isFinite(need) ? brl(need) : "–") + '</td>';
+      tb.appendChild(tr);
+    });
+
+    // gráfico
+    var horizonte = isFinite(meses) && meses > 0 ? Math.min(meses, 600) : 240;
+    var serie = trajetoria(p0, aporte, realRef, horizonte);
+    desenhar(serie, meta, horizonte, renda, meta);
+    $("chartSub").textContent = "Patrimônio em valores de hoje, com rendimento real de " + pct(realRef) + " ao ano e aporte de " + brl(aporte) + " por mês. A linha tracejada é a meta.";
+  }
+
+  function desenhar(serie, meta, meses, renda, metaFinal){
+    var cv = $("grafico");
+    var dpr = window.devicePixelRatio || 1;
+    var w = cv.clientWidth, h = cv.clientHeight;
+    cv.width = w * dpr; cv.height = h * dpr;
+    var ctx = cv.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);
+
+    var padL = 0, padR = 6, padT = 10, padB = 22;
+    var maxY = Math.max(meta, serie[serie.length-1] || 0) * 1.08;
+    if (!isFinite(maxY) || maxY <= 0) maxY = 1;
+    var iw = w - padL - padR, ih = h - padT - padB;
+
+    var X = function(i){ return padL + (serie.length <= 1 ? 0 : iw * i / (serie.length - 1)); };
+    var Y = function(v){ return padT + ih - ih * (v / maxY); };
+
+    // grade
+    ctx.strokeStyle = "#E4E4E4"; ctx.lineWidth = 1;
+    for (var g=0; g<=3; g++){
+      var yy = padT + ih * g/3;
+      ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(w - padR, yy); ctx.stroke();
+    }
+
+    // meta
+    if (isFinite(meta) && meta > 0){
+      ctx.save();
+      ctx.setLineDash([5,5]);
+      ctx.strokeStyle = "#B3261E";
+      ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(0, Y(meta)); ctx.lineTo(w - padR, Y(meta)); ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = "#B3261E";
+      ctx.font = "600 11px Inter, sans-serif";
+      ctx.fillText("meta " + brl(meta), 4, Math.max(12, Y(meta) - 6));
+    }
+
+    // area + linha
+    ctx.beginPath();
+    ctx.moveTo(X(0), Y(serie[0]));
+    for (var i=1;i<serie.length;i++) ctx.lineTo(X(i), Y(serie[i]));
+    ctx.lineTo(X(serie.length-1), padT + ih);
+    ctx.lineTo(X(0), padT + ih);
+    ctx.closePath();
+    ctx.fillStyle = "rgba(11,11,11,0.06)";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(X(0), Y(serie[0]));
+    for (var j=1;j<serie.length;j++) ctx.lineTo(X(j), Y(serie[j]));
+    ctx.strokeStyle = "#0B0B0B"; ctx.lineWidth = 2.2; ctx.lineJoin = "round";
+    ctx.stroke();
+
+    // eixo x
+    ctx.fillStyle = "#9A9A9A"; ctx.font = "11px Inter, sans-serif";
+    ctx.fillText("hoje", 0, h - 4);
+    var lblFim = meses >= 12 ? Math.round(meses/12) + " anos" : meses + " meses";
+    var tw = ctx.measureText(lblFim).width;
+    ctx.fillText(lblFim, w - padR - tw, h - 4);
+  }
+
+  // máscara de moeda
+  function maskMoeda(el){
+    el.addEventListener("input", function(){
+      var d = el.value.replace(/\D/g,"").slice(0,12);
+      if (!d){ el.value = ""; calcular(); return; }
+      el.value = parseInt(d,10).toLocaleString("pt-BR");
+      calcular();
+    });
+  }
+  ["renda","patrimonio","aporte"].forEach(function(id){ maskMoeda($(id)); });
+  ["cdi","ipca"].forEach(function(id){
+    $(id).addEventListener("input", function(){
+      var v = $(id).value.replace(/[^\d,\.]/g,"");
+      $(id).value = v;
+      calcular();
+    });
+  });
+
+  window.addEventListener("resize", calcular);
+  calcular();
+})();
+</script>
+</body>
+</html>
