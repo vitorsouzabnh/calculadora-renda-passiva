@@ -395,7 +395,10 @@
       calcular();
     });
   }
-  ["renda","patrimonio","aporte"].forEach(function(id){ maskMoeda($(id)); });
+  ["renda","patrimonio","aporte"].forEach(function(id){
+    maskMoeda($(id));
+    $(id).value = parseInt($(id).value.replace(/\D/g,"")||"0",10).toLocaleString("pt-BR");
+  });
   ["cdi","ipca"].forEach(function(id){
     $(id).addEventListener("input", function(){
       var v = $(id).value.replace(/[^\d,\.]/g,"");
