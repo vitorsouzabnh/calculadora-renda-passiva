@@ -88,6 +88,35 @@
   details ul{padding-left:20px}
   details li{margin-bottom:7px}
 
+/* ---- captura de lead ---- */
+  .gate{position:relative;margin-top:34px}
+  .gate .locked{filter:blur(7px);pointer-events:none;user-select:none;opacity:.55;max-height:420px;overflow:hidden}
+  .form-card{background:var(--ink);color:#fff;border-radius:18px;padding:30px 26px;margin-top:26px;position:relative;overflow:hidden}
+  .form-card .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:#0B0B0B;background:#fff;border-radius:100px;padding:5px 12px;margin-bottom:16px}
+  .form-card h3{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:10px}
+  .form-card .desc{font-size:14px;color:#B5B5B5;line-height:1.6;margin-bottom:22px}
+  .form-card .fld{margin-bottom:12px}
+  .form-card label{display:block;font-size:12px;font-weight:600;color:#9A9A9A;margin-bottom:6px;letter-spacing:.02em}
+  .form-card input{width:100%;padding:14px 15px;border-radius:10px;border:1px solid #333;
+    background:#1A1A1A;color:#fff;font-size:16px;font-family:inherit;outline:0}
+  .form-card input:focus{border-color:#777}
+  .form-card input::placeholder{color:#666}
+  .form-card input.bad{border-color:#E05555}
+  .form-card .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.form-card .row{grid-template-columns:1fr}}
+  .form-card button{width:100%;margin-top:8px;padding:16px;border-radius:10px;border:0;background:#fff;color:#0B0B0B;
+    font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:-.01em;transition:transform .12s}
+  .form-card button:hover{transform:translateY(-1px)}
+  .form-card button:disabled{opacity:.6;cursor:default;transform:none}
+  .form-card .lgpd{font-size:11.5px;color:#7A7A7A;line-height:1.55;margin-top:14px}
+  .form-card .err{font-size:13px;color:#FF8A8A;margin-top:10px;display:none}
+  .form-ok{background:var(--soft);border-radius:16px;padding:26px;margin-top:26px;display:none}
+  .form-ok .ck{width:40px;height:40px;border-radius:50%;background:#0B0B0B;color:#fff;display:flex;
+    align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+  .form-ok h3{font-size:20px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+  .form-ok p{font-size:14px;color:var(--grey);line-height:1.6}
+
   .disc{margin-top:34px;padding:18px 20px;background:var(--soft);border-radius:12px;font-size:12.5px;color:#7A7A7A;line-height:1.6}
   .disc b{color:#5A5A5A}
   .src{font-size:11.5px;color:#A0A0A0;margin-top:14px;line-height:1.6}
@@ -163,7 +192,9 @@
     </div>
   </div>
 
-  <h3 class="sec">Onde é mais barato chegar lá</h3>
+  <div class="gate" id="gate">
+    <div class="locked" id="locked">
+      <h3 class="sec">Onde é mais barato chegar lá</h3>
   <p class="sec-sub">Mesma renda mensal, patrimônio diferente em cada tipo de investimento. Quanto maior o rendimento líquido, menos capital você precisa juntar.</p>
   <table id="tab">
     <thead>
@@ -173,9 +204,36 @@
   </table>
   <p class="sec-sub" style="margin-top:14px;font-size:13px;color:#9A9A9A">Nos FIIs e nas ações, o rendimento informado já é a renda sobre um patrimônio que tende a acompanhar a inflação. Nas demais linhas, o valor mostrado é a taxa nominal já líquida de imposto, convertida em taxa real.</p>
 
-  <h3 class="sec">Sua evolução</h3>
-  <p class="sec-sub" id="chartSub">–</p>
-  <div class="chartbox"><canvas id="grafico"></canvas></div>
+      <h3 class="sec">Sua evolução</h3>
+      <p class="sec-sub" id="chartSub">–</p>
+      <div class="chartbox"><canvas id="grafico"></canvas></div>
+    </div>
+
+    <div class="form-card" id="captura">
+      <div class="tag">Liberar análise</div>
+      <h3>Veja a comparação completa e o seu prazo</h3>
+      <p class="desc">Informe seu nome e WhatsApp e eu libero na hora: quanto você precisa em cada tipo de investimento, em quanto tempo chega na meta e o gráfico da sua evolução.</p>
+      <form id="leadForm" novalidate>
+        <div class="fld">
+          <label for="lNome">Seu nome</label>
+          <input id="lNome" type="text" placeholder="Nome e sobrenome" autocomplete="name" maxlength="80">
+        </div>
+        <div class="fld">
+          <label for="lWpp">WhatsApp</label>
+          <input id="lWpp" type="tel" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="numeric" maxlength="16">
+        </div>
+        <div class="err" id="lErr">Confira o nome e o WhatsApp antes de continuar.</div>
+        <button type="submit" id="lBtn">Liberar minha análise</button>
+        <div class="lgpd">Seus dados são usados só para esta análise e contato sobre ela. Sem cadastro em lista, sem repasse a terceiros. Você pode pedir a exclusão a qualquer momento.</div>
+      </form>
+    </div>
+
+    <div class="form-ok" id="okBox">
+      <div class="ck">✓</div>
+      <h3>Liberado. Análise completa abaixo.</h3>
+      <p>Recebi seus números. Se fizer sentido, te chamo no WhatsApp para entender o objetivo por trás da renda que você quer — e o que muda na estratégia.</p>
+    </div>
+  </div>
 
   <details>
     <summary>Como a conta é feita</summary>
@@ -408,6 +466,96 @@
   });
 
   window.addEventListener("resize", calcular);
+
+  // ------------------------------------------------ captura de lead
+  var WEBHOOK = "https://maestro.adapta.one/webhooks/generic/7fbefdeaee5d2fa4dbe192c4e219271e25fb5c9daad59b215746ac5e14b8f973";
+  var LIBERADO = "crp_liberado";
+  var UTM = (function(){
+    var q = new URLSearchParams(location.search), o = {};
+    ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","utm_id"].forEach(function(k){
+      if (q.get(k)) o[k] = q.get(k);
+    });
+    return o;
+  })();
+
+  function soDigitos(v){ return String(v).replace(/\D/g,""); }
+
+  function maskWpp(el){
+    el.addEventListener("input", function(){
+      var d = soDigitos(el.value).slice(0,11), out = "";
+      if (d.length > 0) out = "(" + d.slice(0,2);
+      if (d.length >= 3) out += ") " + d.slice(2, d.length > 10 ? 7 : 6);
+      if (d.length > (d.length > 10 ? 7 : 6)) out += "-" + d.slice(d.length > 10 ? 7 : 6);
+      el.value = out;
+      el.classList.remove("bad");
+    });
+  }
+
+  function liberar(animar){
+    $("locked").classList.remove("locked");
+    $("captura").style.display = "none";
+    if (animar) $("okBox").style.display = "block";
+    try { localStorage.setItem(LIBERADO, "1"); } catch(e){}
+    setTimeout(function(){ $("locked").scrollIntoView({behavior:"smooth", block:"start"}); }, 80);
+    calcular();
+  }
+
+  function montarPayload(){
+    return {
+      tipo: "renda-passiva",
+      nome: $("lNome").value.trim(),
+      wpp: soDigitos($("lWpp").value),
+      renda: Math.round(num($("renda"))),
+      patrimonio: Math.round(num($("patrimonio"))),
+      aporte: Math.round(num($("aporte"))),
+      cdi: num($("cdi")),
+      ipca: num($("ipca")),
+      patrimonio_necessario: $("rPatrimonio").textContent,
+      tempo: $("rTempo").textContent,
+      utm_source: UTM.utm_source || "",
+      utm_medium: UTM.utm_medium || "",
+      utm_campaign: UTM.utm_campaign || "",
+      utm_content: UTM.utm_content || "",
+      utm_term: UTM.utm_term || "",
+      utm_id: UTM.utm_id || "",
+      ts: new Date().toISOString()
+    };
+  }
+
+  function enviar(){
+    var nome = $("lNome").value.trim();
+    var d = soDigitos($("lWpp").value);
+    var okNome = nome.length >= 3 && nome.indexOf(" ") > 0;
+    var okWpp = d.length === 10 || d.length === 11;
+    $("lNome").classList.toggle("bad", !okNome);
+    $("lWpp").classList.toggle("bad", !okWpp);
+    if (!okNome || !okWpp){ $("lErr").style.display = "block"; return; }
+
+    $("lErr").style.display = "none";
+    var btn = $("lBtn");
+    btn.disabled = true; btn.textContent = "Liberando...";
+
+    var payload = montarPayload();
+    // libera na hora: o valor é do usuário, o lead já foi informado
+    liberar(true);
+
+    fetch(WEBHOOK, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {"Content-Type": "text/plain;charset=UTF-8"},
+      body: JSON.stringify(payload)
+    }).catch(function(){ /* no-cors não devolve status; falha de rede não bloqueia o usuário */ });
+  }
+
+  if ($("lNome")) {
+    maskWpp($("lWpp"));
+    $("lNome").addEventListener("input", function(){ this.classList.remove("bad"); });
+    $("leadForm").addEventListener("submit", function(ev){ ev.preventDefault(); enviar(); });
+    var ja = null;
+    try { ja = localStorage.getItem(LIBERADO); } catch(e){}
+    if (ja === "1") liberar(false);
+  }
+
   calcular();
 })();
 </script>
